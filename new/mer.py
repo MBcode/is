@@ -73,6 +73,9 @@ def ccc(fn):
     wc = ccwc()
     print(f'wc={wc}')
 
+def maccp(s):
+    cs = f'echo {s} |xclip -selection clipboard'
+
 def ccsay():
     #cs = 'pbpaste | espeak --stdin'
     cs = f'xclip -selection clipboard -o | espeak --stdin -s 245 -p 70'
@@ -84,6 +87,14 @@ def ccsay():
 #alias sortucn 'sort | uniq -c |sort -n'
 #could have the ret put in the cp buffer, then run the count on that
 #if using ccsay would have2run that before overwritting the buffer
+def cccounts(s):
+    #don't need cp buffer
+    cs = f"echo '{s}'|cut -d'/' -f5 |sort | uniq -c |sort -rn"
+    #print(cs)
+    r = os_system_(cs)
+    print(r)
+    return r
+
 
 def get_ent_fn(fn):
     ccc(fn)
@@ -104,5 +115,7 @@ if __name__ == '__main__':
         r=get_ent(lex)
     else:
         r=get_ent()
+    cccounts(r)
     ccsay()
     #print(r)
+    #cccounts(r)
