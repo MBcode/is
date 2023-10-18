@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #convenience for https://github.com/lasigeBioTM/MER
 #takes file or copy buffer to get entity tagged mike.bobak@gmail
+#-need to make the strings safe
 import sys
 import os
 def os_system(cs):
@@ -26,7 +27,8 @@ def get_ent(n=None): #could send in lex
         ne = p.waitForPaste()
     else:
         ne = p.waitForNewPaste(45)
-    cs = f'./get_entities.sh "{ne}" {lex}'
+    txt=ne.replace('(',' ').replace(')',' ').replace('&','+')
+    cs = f'./get_entities.sh "{txt}" {lex}'
     print(cs)
     r = os_system_(cs)
     print(r)
