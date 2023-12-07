@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# #!/home/bobak/mambaforge/bin/python3
 #convenience for https://github.com/lasigeBioTM/MER
 #takes file or copy buffer to get entity tagged mike.bobak@gmail
 #-need to make the strings safe
@@ -26,7 +27,8 @@ def get_ent(n=None): #could send in lex
     if n==None:
         ne = p.waitForPaste()
     else:
-        ne = p.waitForNewPaste(45)
+        #ne = p.waitForNewPaste(45)
+        ne=n #send in text now
     txt=ne.replace('(',' ').replace(')',' ').replace('&','+')
     cs = f'./get_entities.sh "{txt}" {lex}'
     print(cs)
@@ -60,6 +62,11 @@ def ccc(fn):
 def maccp(s):
     cs = f'echo {s} |xclip -selection clipboard'
 
+def say(txt): #not hearing this way/fix
+    cs = f' echo "{txt}" | espeak --stdin -s 245 -p 70'
+    #print(cs)
+    os_system(cs)
+
 def ccsay():
     "read the cp buffer aloud"
     #cs = 'pbpaste | espeak --stdin'
@@ -86,15 +93,31 @@ def t():
 def t2():
     return get_ent(45)
 
+def get_txtfile(fn):
+    "ret str from file"
+    with open(fn, "r") as f:
+        return f.read()
+
 #consider ccli args, like --speak
 
 if __name__ == '__main__':
     import sys
     if(len(sys.argv)>1):
-        lex = sys.argv[1] #could send in lex
-        r=get_ent(lex)
+        arg = sys.argv[1] #could send in lex, or fn for txt or txt
+        print(f'arg={arg}')
+        if "." in arg and len(arg)<11:
+            print("open file")
+            txt=get_txtfile(arg)
+            r=get_ent(txt)
+        else:
+            print("use text")
+            txt=arg
+            r=get_ent(txt)
+
+        cccounts(r)
+        say(txt)
     else:
         r=get_ent()
-    cccounts(r)
-    ccsay()
+        cccounts(r)
+        ccsay()
     #print(r)
